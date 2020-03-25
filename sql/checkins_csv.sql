@@ -2,6 +2,8 @@
     /* interval between checkins to determine duplicate checkins */
     \set dup_interval 4
 
+\set CHECKINS _checkins
+\set TABLE_NAME :PREFIX:CHECKINS
 /* drop table if it exists and replace with new table */
 BEGIN;
 

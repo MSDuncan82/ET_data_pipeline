@@ -1,3 +1,7 @@
+/* set variables */
+\set WEATHER _weather
+\set TABLE_NAME :PREFIX:WEATHER
+
 /* drop table if it exists and replace with new table */
 BEGIN;
 
@@ -133,21 +137,21 @@ BEGIN;
 
 COMMIT;
 
-/* BEGIN;
+BEGIN;
 
 
     /* drop unused columns */
-    -- ALTER TABLE :TABLE_NAME
-    --     DROP COLUMN total_cloud_cover,
-    --     DROP COLUMN opaque_cloud_cover,
-    --     DROP COLUMN date,
-    --     DROP COLUMN hour,
-    --     DROP COLUMN dry_bulb_temp_c,
-    --     DROP COLUMN wind_speed_6ft_m_s,
-    --     DROP COLUMN wind_speed_19ft_m_s,
-    --     DROP COLUMN wind_hi_mph,
-    --     DROP COLUMN precipitation_mm,
-    --     DROP COLUMN snow_depth_cm;
+    ALTER TABLE :TABLE_NAME
+        DROP COLUMN total_cloud_cover,
+        DROP COLUMN opaque_cloud_cover,
+        DROP COLUMN date,
+        DROP COLUMN hour,
+        DROP COLUMN dry_bulb_temp_c,
+        DROP COLUMN wind_speed_6ft_m_s,
+        DROP COLUMN wind_speed_19ft_m_s,
+        DROP COLUMN wind_hi_mph,
+        DROP COLUMN precipitation_mm,
+        DROP COLUMN snow_depth_cm;
 
-COMMIT; */
+COMMIT;
 
