@@ -115,7 +115,7 @@ We may want to include new gyms in our analysis/model in the future. In order to
 
 Below is a visual representation of the data pipeline:
 
-<img src="images/el_capDatePipeline.png" alt="Pipeline Visualisation"></img>
+<img src="images/el_capDataPipeline.png" alt="Pipeline Visualisation"></img>
 
 Running *process_raw_data.sh* processes the raw files to run the *update_db.sh* script. Running *process_and_updatedb.sh* will run both scripts and create and update the database.
 
