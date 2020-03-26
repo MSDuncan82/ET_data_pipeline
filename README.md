@@ -6,9 +6,9 @@
 
 ## Table of Contents
 
-1. [Background & Motivation](#purpose)
+1. [Purpose](#purpose)
 3. [The Data](#the-data)
-4. [The Data Pipeline](#data-pipeline) <-- Click here to get to the good stuff!
+4. [The Pipeline](#data-pipeline) <-- Click here to get to the good stuff!
 5. [Cleaning](#cleaning)
 
 # Purpose
@@ -115,9 +115,11 @@ We may want to include new gyms in our analysis/model in the future. In order to
 
 Below is a visual representation of the data pipeline:
 
-<img src="images/capstone_1_data_pipeline.png" alt="Pipeline Visualisation"></img>
+<img src="images/el_capDatePipeline.png" alt="Pipeline Visualisation"></img>
 
-All the data is cleaned in the SQL scripts. There were a few noteworthy cleaning steps:
+Running *process_raw_data.sh* processes the raw files to run the *update_db.sh* script. Running *process_and_updatedb.sh* will run both scripts and create and update the database.
+
+The SQL scripts clean the data before going into the database. Some of the more notable cleaning steps are below.
 
 # Cleaning
 
@@ -139,13 +141,7 @@ It is important to accurately portray hours that no one checks in. Aggregating t
 
 In order to get proper values when aggregating, it is important to only include hours that the gym is open. This was done in SQL by creating a temporary table with columns `date` and `hour` that the gym is open and joinning the hourly check-in counts to it.
 
-I only include days that the `tot_checkins > 50` in order to account for days the gym is closed like Christmas or Thanksgiving. Many days have only a few check-ins in a day. This is unlikely if the gym was open to the public. This also captures days where I assume their are test check-ins.
-
-### Duration
-
-<img src="images/gmaps.png" align="center" width="100"></img>
-
-The duration from each user's address to the gym was calculated using Google's Distance Matrix API. This api will calculate the distance and duration between specified locations. This was useful because the API also infers the correct address based on the starting location and destination. The user addresses were manually entered and errors were common but the API got results for over 98% the users.
+I only include days that the `tot_checkins > 50` in order to account for days the gym is closed like Christmas or Thanksgiving. Many days have only a few check-ins in a day. This is unlikely if the gym was open to the public. This also captures days where I assume their are just test check-ins.
 
 ### Weather
 
