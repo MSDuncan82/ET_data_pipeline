@@ -1,9 +1,11 @@
 /* set variables */
-\set CHECKINS _checkins
-\set TABLE_NAME :PREFIX:CHECKINS
+\set SUFFIX _customers
+\set TABLE_NAME :PREFIX:SUFFIX
 
 /* add in cust table info*/
 BEGIN;
+    
+    DROP TABLE IF EXISTS public.:TABLE_NAME;
 
     CREATE TABLE :TABLE_NAME (
                     id INT,

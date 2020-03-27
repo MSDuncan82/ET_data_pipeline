@@ -1,16 +1,16 @@
 #!/bin/bash
 ############################################################################
 #
-# Usage: csv_to_sql.sh
+# Usage: run_sql.sh
 #
 # Run a psql script with a given sql script
 #
-# Options (Required):
-#  --db [ psql database name ] 
-#  --sql [ path to sql file ] 
-#  --prefix [ gym prefix ]: ex: 'gol'
-#  --csv [ path to csv file ]
-#  --user(default=michael) [ user to log in to psql ]
+# Options:
+#  -d|--db [ psql database name ] 
+#  -s|--sql [ path to sql file ] 
+#  -p|--prefix [ gym prefix ]: ex: 'gol'
+#  -c|--csv [ path to csv file ]
+#  -u|--user(default=michael) [ user to log in to psql ]
 #
 # Limitations: 
 #  Required options: --sql [ path to sql file ] 
@@ -65,11 +65,15 @@ while [ -n "$1" ]; do
 
     -h | --help)
         show_help
+
+        exit 0
         ;;
 
-	*)  echo "Did not recognize ${$1}"
+	*)  echo "Did not recognize $1"
         echo ""
         show_help
+
+        exit -1
         ;;
 
 	esac

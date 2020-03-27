@@ -7,9 +7,10 @@
 # Data is cleaned with PSQL scripts.
 #
 # Options (Required):
-#  --db [ database name ] 
-#  --data [ path to data directory ] 
-#  --gyms [ 'gym_1 gym_2 ... gym_n' ] gym names should be 3 letter lowercase strings ex: 'gol eng'
+#  -d|--db [ database name ] 
+#  -f|--data [ path to data directory ] 
+#  -g|--gyms [ 'gym_1 gym_2 ... gym_n' ] gym names should be 3 letter lowercase strings ex: 'gol eng'
+#  -u|--user [ user to log in to psql ] (default='michael')
 #
 # Limitations: 
 #  All options are required but can input in any order
@@ -50,8 +51,12 @@ show_help () {
         echo "      --db [ psql database name ]" 
         echo "      --data [ path to data directory ]" 
         echo "      --gyms [ 'gym_1 gym_2 ... gym_n' ] gym names should be 3 letter lowercase strings. Examples: 'gol eng'"
-        echo "      --user(default=michael) [ user to log in to psql ]"
+        echo "      -u|--user [ user to log in to psql ] (default='michael')"
 }
+
+# Default Values
+USER=michael
+DB=el_cap
 
 ## Argument handling
 while [ -n "$1" ]; do
@@ -80,6 +85,11 @@ while [ -n "$1" ]; do
 
             shift
         done
+        ;;
+    
+    -u | --user)
+        USER=$2
+        shift
         ;;
 
     -h | --help)
@@ -137,7 +147,7 @@ for gym in ${GYMS[@]}; do
 done
 
 # Import customer tables into database
-CUST_SQL_PATH='../sql/customers.sql'
+CUST_SQL_PATH='../sql/customers_csv.sql'
 for gym in ${GYMS[@]}; do
 
     CUST_CSV_PATH="'${DATA_PATH}/customers/processed/${gym}_customers.csv'"
