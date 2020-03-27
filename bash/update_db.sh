@@ -48,9 +48,9 @@ toggle_leading_slash () {
 show_help () {
         echo "Usage:"
         echo "  ./update_db.sh" 
-        echo "      --db [ psql database name ]" 
-        echo "      --data [ path to data directory ]" 
-        echo "      --gyms [ 'gym_1 gym_2 ... gym_n' ] gym names should be 3 letter lowercase strings. Examples: 'gol eng'"
+        echo "      -d|--db [ psql database name ]" 
+        echo "      -f|--data [ path to data directory ]" 
+        echo "      -g|--gyms [ 'gym_1,gym_2,...,gym_n' ] gym names should be 3 letter lowercase strings. Examples: 'gol,eng'"
         echo "      -u|--user [ user to log in to psql ] (default='michael')"
 }
 
@@ -76,15 +76,11 @@ while [ -n "$1" ]; do
     
     -g | --gyms)
         PARAMS=$2
-        GYMS=()
-
-        for param in $PARAMS; do
-            if [ ${#param} == 3 ]; then
-                GYMS+=($param)
-            fi
-
-            shift
-        done
+        SAVEIFS=$IFS
+        IFS=','
+        GYMS=($PARAMS)
+        IFS=$SAVEIFS
+        shift
         ;;
     
     -u | --user)
@@ -98,7 +94,7 @@ while [ -n "$1" ]; do
         ;;
 
 	*)  
-        echo "Did not recognize ${$1}"
+        echo "Did not recognize ${1}"
         echo ""
         show_help
         exit -1
@@ -113,17 +109,19 @@ done
 ## Database Creation
 
 # Create Database if it does not exist
+echo "Creating database ${DB}..."
 _check_db_query="SELECT EXISTS(SELECT datname FROM pg_catalog.pg_database WHERE datname = '${DB}');"
 _db_exists=(`psql -tW -U postgres -c "${_check_db_query}"`)
 
-if [ $_db_exists == 'f' ]; then
+if [[ $_db_exists == 'f' ]]; then
     psql -a -U postgres -c "CREATE DATABASE ${DB};"
 fi
 
 # Import cleaned check-ins into database
+echo "Importing check-in data..."
 CHECK_SQL_PATH='../sql/checkins_csv.sql'
 for gym in ${GYMS[@]}; do
-
+    echo "GYM: ${gym}"
     CHECK_CSV_PATH="'${DATA_PATH}/checkins/processed/${gym}_checkins.csv'"
     PREFIX="${gym}"
     ./run_sql.sh "--db" "${DB}" "--csv" "${CHECK_CSV_PATH}" "--sql" "${CHECK_SQL_PATH}" "--prefix" "${PREFIX}"
@@ -131,31 +129,35 @@ for gym in ${GYMS[@]}; do
 done
 
 # Aggregate check-ins to hourly counts
+echo "Aggregating check-in data into count tables..."
 COUNTS_SQL_PATH='../sql/counts.sql'
 for gym in ${GYMS[@]}; do
-
+    echo "GYM: ${gym}"
     ./run_sql.sh "--db" "${DB}" "--sql" "${COUNTS_SQL_PATH}" "--prefix" "${gym}"
 
 done
 
 # Remove check-ins when the gym was closed using counts table. check-ins at close are possibly tests or employees.
+echo "Cleaning up check-in tables..."
 CLEAN_CHECKS_SQL_PATH='../sql/remove_closed_checkins.sql'
 for gym in ${GYMS[@]}; do
-
+    echo "GYM: ${gym}"
     ./run_sql.sh "--db" "${DB}" "--sql" "${CLEAN_CHECKS_SQL_PATH}" "--prefix" "${gym}"
 
 done
 
 # Import customer tables into database
+echo "Importing customer data..."
 CUST_SQL_PATH='../sql/customers_csv.sql'
 for gym in ${GYMS[@]}; do
-
+    echo "GYM: ${gym}"
     CUST_CSV_PATH="'${DATA_PATH}/customers/processed/${gym}_customers.csv'"
     ./run_sql.sh "--csv" "${CUST_CSV_PATH}" "--db" "${DB}" "--sql" "${CUST_SQL_PATH}" "--prefix" "${gym}"
 
 done
 
 # Import weather
+echo "Importing weather data..."
 PREFIX="nrl"
 WEATHER_SQL_PATH='../sql/weather_csv.sql'
 WEATHER_CSV_PATH="'${DATA_PATH}/weather/processed/${PREFIX}_weather.csv'"

@@ -75,6 +75,8 @@ for _data_directory in $_data_directories; do
 
         echo "Concatenating csv files -> ${_data_directory}processed"
 
+        rm -rf ${_data_directory}processed
+
         _suffix=$(basename ${_data_directory})
         ./csv_concat.sh -f $_raw_data_directory -o "${_data_directory}processed" -s $_suffix
 

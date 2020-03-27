@@ -1,6 +1,7 @@
 /* set variables */
 \set WEATHER _weather
 \set TABLE_NAME :PREFIX:WEATHER
+\set client_encoding to 'latin1'
 
 /* drop table if it exists and replace with new table */
 BEGIN;

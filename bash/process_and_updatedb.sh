@@ -18,7 +18,6 @@
 ############################################################################
 
 ## Flags
-set -u
 
 ## Functions
 show_help () {
@@ -50,16 +49,8 @@ while [ -n "$1" ]; do
         ;;
     
     -g | --gyms)
-        PARAMS=$2
-        GYMS=()
-
-        for param in $PARAMS; do
-            if [ ${#param} == 3 ]; then
-                GYMS+=($param)
-            fi
-
-            shift
-        done
+        GYMS=$2
+        shift
         ;;
 
     -u | --user)

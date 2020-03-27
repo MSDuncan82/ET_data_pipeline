@@ -7,8 +7,7 @@ BEGIN;
     
     DROP TABLE IF EXISTS public.:TABLE_NAME;
 
-    CREATE TABLE :TABLE_NAME (
-                    id INT,
+    CREATE TABLE :TABLE_NAME (id SERIAL,
                     customer_id VARCHAR,
                     responsible_party_id VARCHAR,
                     customer_type VARCHAR,
@@ -28,8 +27,7 @@ BEGIN;
                     );
 
     /* copy csv file into TABLE_NAME */
-    COPY :TABLE_NAME(id,
-                    customer_id,
+    COPY :TABLE_NAME(customer_id,
                     responsible_party_id,
                     customer_type,
                     address_1,
@@ -45,7 +43,7 @@ BEGIN;
                     birthday,
                     facility_access,
                     guid)
-    FROM :CSV_PATH DELIMITER ',' CSV HEADER;
+    FROM :CSV_PATH DELIMITER ',' CSV HEADER ENCODING 'latin1';
 
     /* delete duplicates */
     DELETE
