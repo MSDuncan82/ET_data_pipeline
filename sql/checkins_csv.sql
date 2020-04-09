@@ -22,7 +22,15 @@ BEGIN;
                     );
 
     /*copy csv file into TABLE_NAME*/
-    COPY :TABLE_NAME(date, checkin_hour, facility_name, customer_key, guid, age_at_checkin, checkin_type, checkin_status, total_checkins)
+    COPY :TABLE_NAME(date, 
+                    checkin_hour, 
+                    facility_name, 
+                    customer_key, 
+                    guid, 
+                    age_at_checkin, 
+                    checkin_type, 
+                    checkin_status, 
+                    total_checkins)
     FROM :CSV_PATH DELIMITER ',' CSV HEADER;
 
 COMMIT;

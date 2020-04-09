@@ -124,7 +124,7 @@ for gym in ${GYMS[@]}; do
     echo "GYM: ${gym}"
     CHECK_CSV_PATH="'${DATA_PATH}/checkins/processed/${gym}_checkins.csv'"
     PREFIX="${gym}"
-    ./run_sql.sh "--db" "${DB}" "--csv" "${CHECK_CSV_PATH}" "--sql" "${CHECK_SQL_PATH}" "--prefix" "${PREFIX}"
+    ./run_sql.sh "--db" "${DB}" "--csv" "${CHECK_CSV_PATH}" "--sql" "${CHECK_SQL_PATH}" "--prefix" "${PREFIX} -U ${USER}"
 
 done
 
@@ -133,7 +133,7 @@ echo "Aggregating check-in data into count tables..."
 COUNTS_SQL_PATH='../sql/counts.sql'
 for gym in ${GYMS[@]}; do
     echo "GYM: ${gym}"
-    ./run_sql.sh "--db" "${DB}" "--sql" "${COUNTS_SQL_PATH}" "--prefix" "${gym}"
+    ./run_sql.sh "--db" "${DB}" "--sql" "${COUNTS_SQL_PATH}" "--prefix" "${gym} -U ${USER}"
 
 done
 
@@ -142,7 +142,7 @@ echo "Cleaning up check-in tables..."
 CLEAN_CHECKS_SQL_PATH='../sql/remove_closed_checkins.sql'
 for gym in ${GYMS[@]}; do
     echo "GYM: ${gym}"
-    ./run_sql.sh "--db" "${DB}" "--sql" "${CLEAN_CHECKS_SQL_PATH}" "--prefix" "${gym}"
+    ./run_sql.sh "--db" "${DB}" "--sql" "${CLEAN_CHECKS_SQL_PATH}" "--prefix" "${gym} -U ${USER}"
 
 done
 
@@ -152,7 +152,7 @@ CUST_SQL_PATH='../sql/customers_csv.sql'
 for gym in ${GYMS[@]}; do
     echo "GYM: ${gym}"
     CUST_CSV_PATH="'${DATA_PATH}/customers/processed/${gym}_customers.csv'"
-    ./run_sql.sh "--csv" "${CUST_CSV_PATH}" "--db" "${DB}" "--sql" "${CUST_SQL_PATH}" "--prefix" "${gym}"
+    ./run_sql.sh "--csv" "${CUST_CSV_PATH}" "--db" "${DB}" "--sql" "${CUST_SQL_PATH}" "--prefix" "${gym} -U ${USER}"
 
 done
 
@@ -162,4 +162,4 @@ PREFIX="nrl"
 WEATHER_SQL_PATH='../sql/weather_csv.sql'
 WEATHER_CSV_PATH="'${DATA_PATH}/weather/processed/${PREFIX}_weather.csv'"
 
-./run_sql.sh "--csv" "${WEATHER_CSV_PATH}" "--db" "${DB}" "--sql" "${WEATHER_SQL_PATH}" "--prefix" "${PREFIX}"
+./run_sql.sh "--csv" "${WEATHER_CSV_PATH}" "--db" "${DB}" "--sql" "${WEATHER_SQL_PATH}" "--prefix" "${PREFIX} -U ${USER}"

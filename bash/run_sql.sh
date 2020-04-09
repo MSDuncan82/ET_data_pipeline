@@ -31,7 +31,7 @@ show_help () {
 # Flags
 
 # Default Values
-USER=michael
+USER=mike
 DB=el_cap
 
 # Argument Handling
