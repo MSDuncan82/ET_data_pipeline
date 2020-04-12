@@ -66,7 +66,7 @@ for _data_directory in $_data_directories; do
     if [[ ! "$_xlsx_files_in_directory" == *"*"* ]]; then
 
         echo "Converting .xlsx -> .csv"
-        ./xlsx_to_csv.sh -f $_raw_data_directory >/dev/null 2>&1
+        ./xlsx_to_csv.sh -f $_raw_data_directory
     fi
 
     # Check if there are csv files in raw data folder and concatenate them to a processed directory

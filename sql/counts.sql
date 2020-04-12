@@ -10,7 +10,7 @@ BEGIN;
     DROP TABLE IF EXISTS public.:COUNTS_TABLE;
 
     CREATE TABLE :COUNTS_TABLE (
-                    datetime TIMESTAMPTZ,
+                    datetime TIMESTAMP,
                     tot_checkins INT,
                     mem_checkins INT,
                     nmem_checkins INT
@@ -34,7 +34,7 @@ BEGIN;
 
     /* Create new counts table to replace old one*/
     CREATE TABLE new_:COUNTS_TABLE (
-                    datetime TIMESTAMPTZ,
+                    datetime TIMESTAMP,
                     tot_checkins INT,
                     mem_checkins INT,
                     nmem_checkins INT

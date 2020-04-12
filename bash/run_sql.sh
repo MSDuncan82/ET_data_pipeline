@@ -80,7 +80,7 @@ while [ -n "$1" ]; do
 	shift
 done
 
-psql -d $DB -U $USER \
+psql -h /var/run/postgresql -d $DB -U $USER \
     -f $SQL_PATH \
     --set AUTOCOMMIT=off \
     --set ON_ERROR_STOP=on \

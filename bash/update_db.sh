@@ -111,10 +111,10 @@ done
 # Create Database if it does not exist
 echo "Creating database ${DB}..."
 _check_db_query="SELECT EXISTS(SELECT datname FROM pg_catalog.pg_database WHERE datname = '${DB}');"
-_db_exists=(`psql -tW -U postgres -c "${_check_db_query}"`)
+_db_exists=(`psql -h /var/run/postgresql/ -tW -U postgres -c "${_check_db_query}"`)
 
 if [[ $_db_exists == 'f' ]]; then
-    psql -a -U postgres -c "CREATE DATABASE ${DB};"
+    psql -h /var/run/postgresql/ -a -U postgres -c "CREATE DATABASE ${DB};"
 fi
 
 # Import cleaned check-ins into database

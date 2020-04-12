@@ -14,24 +14,32 @@ BEGIN;
                     checkin_hour INT,
                     facility_name VARCHAR,
                     customer_key VARCHAR,
+                    customer_name VARCHAR,
                     guid VARCHAR,
                     age_at_checkin VARCHAR,
                     checkin_type VARCHAR,
+                    checkin_details VARCHAR,
+                    checkin_notes VARCHAR,
                     checkin_status VARCHAR,
                     total_checkins VARCHAR
                     );
 
     /*copy csv file into TABLE_NAME*/
-    COPY :TABLE_NAME(date, 
-                    checkin_hour, 
-                    facility_name, 
-                    customer_key, 
-                    guid, 
-                    age_at_checkin, 
-                    checkin_type, 
-                    checkin_status, 
-                    total_checkins)
-    FROM :CSV_PATH DELIMITER ',' CSV HEADER;
+    COPY :TABLE_NAME(
+                    date,
+                    checkin_hour,
+                    facility_name,
+                    customer_key,
+                    customer_name,
+                    guid,
+                    age_at_checkin,
+                    checkin_type,
+                    checkin_details,
+                    checkin_notes,
+                    checkin_status,
+                    total_checkins
+                    )
+    FROM :CSV_PATH DELIMITER ',' CSV HEADER ENCODING 'latin1';
 
 COMMIT;
 
@@ -39,7 +47,7 @@ COMMIT;
 BEGIN;
 
     ALTER TABLE :TABLE_NAME
-        ADD COLUMN datetime TIMESTAMPTZ,
+        ADD COLUMN datetime TIMESTAMP,
         ADD COLUMN home_gym VARCHAR;
 
     UPDATE :TABLE_NAME
@@ -64,12 +72,15 @@ BEGIN;
     /* create new table */
     CREATE TABLE new_:TABLE_NAME (
                     id SERIAL PRIMARY KEY,
-                    datetime TIMESTAMPTZ,
+                    datetime TIMESTAMP,
                     facility_name VARCHAR,
                     customer_key VARCHAR,
+                    customer_name VARCHAR,
                     guid VARCHAR,
                     age_at_checkin INT,
                     checkin_type VARCHAR,
+                    checkin_details VARCHAR,
+                    checkin_notes VARCHAR,
                     checkin_status VARCHAR,
                     home_gym VARCHAR);
 
@@ -77,19 +88,25 @@ BEGIN;
     INSERT INTO new_:TABLE_NAME (
                         datetime, 
                         facility_name, 
-                        customer_key, 
+                        customer_key,
+                        customer_name, 
                         guid, 
                         age_at_checkin, 
-                        checkin_type, 
+                        checkin_type,
+                        checkin_details,
+                        checkin_notes, 
                         checkin_status,
                         home_gym)
                     SELECT
                         datetime, 
                         facility_name, 
-                        customer_key, 
+                        customer_key,
+                        customer_name, 
                         guid, 
                         age_at_checkin::INT, 
-                        checkin_type, 
+                        checkin_type,
+                        checkin_details,
+                        checkin_notes, 
                         checkin_status,
                         home_gym
                     FROM
@@ -124,25 +141,32 @@ BEGIN;
     /* create new table */
     CREATE TABLE new_:TABLE_NAME (
                     id SERIAL PRIMARY KEY,
-                    datetime TIMESTAMPTZ,
+                    datetime TIMESTAMP,
                     facility_name VARCHAR,
                     customer_key VARCHAR,
+                    customer_name VARCHAR,
                     guid VARCHAR,
                     age_at_checkin INT,
                     checkin_type VARCHAR,
+                    checkin_details VARCHAR,
+                    checkin_notes VARCHAR,
                     checkin_status VARCHAR,
                     home_gym VARCHAR
                         );
 
     /* insert non duplicates into table */
+
     INSERT INTO new_:TABLE_NAME (
                         id,
                         datetime, 
                         facility_name, 
-                        customer_key, 
+                        customer_key,
+                        customer_name, 
                         guid, 
                         age_at_checkin, 
                         checkin_type, 
+                        checkin_details,
+                        checkin_notes,
                         checkin_status,
                         home_gym)
                     SELECT
@@ -150,9 +174,12 @@ BEGIN;
                         t.datetime, 
                         t.facility_name, 
                         t.customer_key, 
+                        t.customer_name,
                         t.guid, 
                         t.age_at_checkin, 
-                        t.checkin_type, 
+                        t.checkin_type,
+                        t.checkin_details,
+                        t.checkin_notes, 
                         t.checkin_status,
                         t.home_gym
                     FROM
